@@ -32,6 +32,7 @@ void Ball::init() {
     playerFixtureDef.shape = &ballBox;
     playerFixtureDef.density = 1.0f;
     playerFixtureDef.friction = 0.0f;
+    playerFixtureDef.restitution = 0.6f; // Make it bounce a little bit
     //playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(&playerBoxData);
     body->CreateFixture(&playerFixtureDef);
 
@@ -39,8 +40,8 @@ void Ball::init() {
 
 void Ball::update() {
     
-    //std::cout << "body position [" << body->GetPosition().x << ":" << body->GetPosition().y 
-    //    << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
+    std::cout << "Ball position [" << body->GetPosition().x << ":" << body->GetPosition().y 
+        << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
     
     // Get the position of the body
     b2Vec2 bodyPos = body->GetPosition();
@@ -48,6 +49,7 @@ void Ball::update() {
     sf::Vector2f graphicPosition = Game::metersToPixels(bodyPos);
     // Set the position of the Graphic object
 	shape.setPosition(graphicPosition);
+
 }
 
 void Ball::render() {

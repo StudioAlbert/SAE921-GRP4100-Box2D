@@ -6,6 +6,7 @@
 #include "box2d/b2_world.h"
 
 #include "ball.h"
+#include "bouncer.h"
 
 class Game{
 public:
@@ -18,7 +19,6 @@ public:
 	static b2Vec2 pixelsToMeters(sf::Vector2f pixels);
 	static b2Vec2 pixelsToMeters(sf::Vector2u pixels);
 	static float pixelsToMeters(float pixels);
-
 	static sf::Vector2f metersToPixels(b2Vec2 meters);
 
 	static const float pixelsMetersRatio;
@@ -32,5 +32,6 @@ private:
 	b2World world_{ b2Vec2(0.0f, -9.81f) };
 
 	Ball theBall;
+	Bouncer theBouncer;
 
 };

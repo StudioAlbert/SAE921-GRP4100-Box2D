@@ -2,7 +2,9 @@
 
 const float Game::pixelsMetersRatio = 100.0f;
 
-Game::Game() : theBall(*this, this->window_)
+Game::Game() : 
+	theBall(*this, this->window_),
+	theBouncer(*this, this->window_)
 {
 }
 
@@ -14,6 +16,7 @@ void Game::init() {
 
 	// Init all elements
 	theBall.init();
+	theBouncer.init();
 
 }
 
@@ -58,6 +61,7 @@ void Game::loop()
 
 		// Update the elements
 		theBall.update();
+		theBouncer.update();
 
 #pragma endregion
 
@@ -67,6 +71,7 @@ void Game::loop()
 		window_.clear();
 		// Render All elements
 		theBall.render();
+		theBouncer.render();
 		// Display all elements
 		window_.display();
 #pragma endregion

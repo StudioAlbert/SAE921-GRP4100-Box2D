@@ -13,3 +13,6 @@ add_subdirectory ("00-Starter")
 # Each sub-project
 set(EXECUTABLE_CUSTOM_NAME "01-Gravity")
 add_subdirectory ("01-Gravity")
+# Each sub-project
+set(EXECUTABLE_CUSTOM_NAME "02-Bouncing")
+add_subdirectory ("02-Bouncing")
