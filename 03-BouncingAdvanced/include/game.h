@@ -1,15 +1,16 @@
 #pragma once
+#include <vector>
 
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/Texture.hpp"
 #include "SFML/Window//Event.hpp"
 #include "box2d/b2_world.h"
-#include "box2d/b2_math.h"
 
 #include "ball.h"
 #include "bouncer.h"
 
 using namespace std;
+using namespace sf;
 
 class Game{
 public:
@@ -29,13 +30,21 @@ public:
 private:
 
 	// The window ---------------------------------------------
-	sf::RenderWindow window_;
+	RenderWindow window_;
 
 	// The physical world -------------------------------------
 	b2Vec2 gravity_;
 	b2World world_;
 
 	Ball theBall;
-	Bouncer theBouncer;
+	vector<Bouncer> bouncers;
+
+#pragma region Physical world methods
+	void clearBouncers();
+#pragma endregion
+
+
+	Vector2f mousePressedPos_bouncer, mouseReleasedPos_bouncer;
+	Vector2f mousePressedPos_ball, mouseReleasedPos_ball;
 
 };

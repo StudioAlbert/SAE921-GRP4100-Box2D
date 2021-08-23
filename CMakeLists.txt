@@ -16,3 +16,6 @@ add_subdirectory ("01-Gravity")
 # Each sub-project
 set(EXECUTABLE_CUSTOM_NAME "02-Bouncing")
 add_subdirectory ("02-Bouncing")
+# Each sub-project
+set(EXECUTABLE_CUSTOM_NAME "03-BouncingAdvanced")
+add_subdirectory ("03-BouncingAdvanced")

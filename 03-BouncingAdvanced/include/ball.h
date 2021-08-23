@@ -1,7 +1,5 @@
 #pragma once
 
-#include <limits>
-
 #include "SFML/Graphics.hpp"
 #include "box2d/box2d.h"
 
@@ -15,7 +13,7 @@ public:
 	void init();
 	void update();
 	void render();
-	void setPixelsPosition(sf::Vector2f _pixelsPosition);
+	void setPixelsPosition(sf::Vector2f _pixelsPosition, sf::Vector2f _velocity);
 
 private:
 	Game& game;

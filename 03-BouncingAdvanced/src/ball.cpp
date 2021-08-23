@@ -12,6 +12,7 @@ void Ball::init() {
 
     // Defining the shape
 	shape.setRadius(20.0f);
+    shape.setOrigin(shape.getRadius() * 0.5f, shape.getRadius() * 0.5f);
 	shape.setFillColor(sf::Color::Red);
 	shape.setFillColor(sf::Color::Red);
 
@@ -25,7 +26,7 @@ void Ball::init() {
 
     // Shape of the physical (A box)
     b2CircleShape ballBox;
-    ballBox.m_radius = Game::pixelsToMeters(shape.getRadius());
+    ballBox.m_radius = shape.getRadius() / game.pixelsMetersRatio;
 
     // The fixture is what it defines the physic react
     b2FixtureDef playerFixtureDef;
@@ -56,9 +57,10 @@ void Ball::render() {
 	window.draw(shape);
 }
 
-void Ball::setPixelsPosition(sf::Vector2f _pixelsPosition) {
+void Ball::setPixelsPosition(sf::Vector2f _pixelsPosition, sf::Vector2f velocity_) {
     // Put in mouse position
     body->SetTransform(Game::pixelsToMeters(_pixelsPosition), body->GetAngle());
     // Reset the velocity (Speed)
-    body->SetLinearVelocity(b2Vec2(0.0f, -0.00001f));
+    b2Vec2 newb2Velocity = game.pixelsToMeters(velocity_);
+    body->SetLinearVelocity(newb2Velocity);
 }
