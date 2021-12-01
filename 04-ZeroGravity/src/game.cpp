@@ -5,12 +5,15 @@ const float Game::pixelsMetersRatio = 100.0f;
 Game::Game() :
 	theBall(*this, this->window_),
 	gravity_(0.0f, 0.0f),
-	world_(gravity_)
+	world_(gravity_),
+	contactListener_(*this)
 {
 
 }
 
 void Game::init() {
+
+	world_.SetContactListener(&contactListener_);
 
 	window_.create(sf::VideoMode(1280, 720), "SAE Platformer");
 	window_.setVerticalSyncEnabled(true);
@@ -87,7 +90,7 @@ void Game::loop()
 			{
 				if (event.mouseButton.button == sf::Mouse::Right) {
 					//// mouse Released position detect
-					//mousePressedPos_bouncer = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
+					mousePressedPos_sensor = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
 				}
 				if (event.mouseButton.button == sf::Mouse::Left) {
 					// mouse Released position detect
@@ -99,7 +102,20 @@ void Game::loop()
 			{
 				if (event.mouseButton.button == sf::Mouse::Right) {
 					//// mouse Released position detect
-					//mouseReleasedPos_bouncer = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
+					mouseReleasedPos_sensor = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
+
+					sensors.push_back(
+						mySensor(
+							*this,
+							this->window_,
+							//sf::Vector2f(event.mouseButton.x, event.mouseButton.y),
+							//50.0f
+							Vector2f(
+								0.5f * mouseReleasedPos_sensor.x + 0.5f * mousePressedPos_sensor.x,
+								0.5f * mouseReleasedPos_sensor.y + 0.5f * mousePressedPos_sensor.y),
+							0.5f * vecDistance(mousePressedPos_sensor, mouseReleasedPos_sensor)
+						)
+					);
 				}
 				if (event.mouseButton.button == sf::Mouse::Left) {
 					mouseReleasedPos_ball = sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
@@ -131,7 +147,9 @@ void Game::loop()
 		for (auto b = windowLimits.begin(); b != windowLimits.end(); b++) {
 			b->update();
 		}
-
+		for (auto s = sensors.begin(); s != sensors.end(); s++) {
+			s->update();
+		}
 #pragma endregion
 
 
@@ -142,6 +160,9 @@ void Game::loop()
 		theBall.render();
 		for (auto b = windowLimits.begin(); b != windowLimits.end(); b++) {
 			b->render();
+		}
+		for (auto s = sensors.begin(); s != sensors.end(); s++) {
+			s->render();
 		}
 		// Display all elements
 		window_.display();
@@ -173,7 +194,7 @@ sf::Vector2f Game::metersToPixels(b2Vec2 meters)
 void Game::clearBouncers()
 {
 
-	for (auto myBouncer = bouncers.begin(); myBouncer != bouncers.end(); myBouncer++)
+	for (auto myBouncer = sensors.begin(); myBouncer != sensors.end(); myBouncer++)
 	{
 		// First remove bodies from the physical world
 		world_.DestroyBody(myBouncer->getBody());
@@ -182,6 +203,22 @@ void Game::clearBouncers()
 		//bouncers.erase(myBouncer--);
 	}
 
-	bouncers.clear();
+	sensors.clear();
 
 }
+
+//void Game::BeginContact(UserDataType userData, UserDataType userData1)
+//{
+//	if (userData == UserDataType::BOUNCER)
+//	{
+//		// Play some sound
+//	}
+//}
+//
+//void Game::EndContact(UserDataType userData, UserDataType userData1)
+//{
+//	if (userData == UserDataType::BOUNCER)
+//	{
+//		// Nothing less
+//	}
+//}

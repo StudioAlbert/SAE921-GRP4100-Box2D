@@ -12,7 +12,7 @@ void Ball::init() {
 
     // Defining the shape
 	shape.setRadius(20.0f);
-    shape.setOrigin(shape.getRadius() * 0.5f, shape.getRadius() * 0.5f);
+    shape.setOrigin(shape.getRadius(), shape.getRadius());
 	shape.setFillColor(sf::Color::Red);
 	shape.setFillColor(sf::Color::Red);
 
@@ -26,7 +26,7 @@ void Ball::init() {
 
     // Shape of the physical (A box)
     b2CircleShape ballBox;
-    ballBox.m_radius = shape.getRadius() / game.pixelsMetersRatio;
+    ballBox.m_radius = Game::pixelsToMeters(shape.getRadius());
 
     // The fixture is what it defines the physic react
     b2FixtureDef playerFixtureDef;
@@ -41,8 +41,8 @@ void Ball::init() {
 
 void Ball::update() {
     
-    std::cout << "Ball position [" << body->GetPosition().x << ":" << body->GetPosition().y 
-        << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
+    //std::cout << "Ball position [" << body->GetPosition().x << ":" << body->GetPosition().y 
+    //    << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
     
     // Get the position of the body
     b2Vec2 bodyPos = body->GetPosition();

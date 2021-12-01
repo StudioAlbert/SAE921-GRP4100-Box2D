@@ -6,11 +6,14 @@
 #include "SFML/Window//Event.hpp"
 #include "box2d/b2_world.h"
 
+#include "SFML_Utilities.h"
+
 #include "ball.h"
 #include "bouncer.h"
+#include "contact_listener.h"
+#include "mySensor.h"
+#include "user_data.h"
 
-using namespace std;
-using namespace sf;
 
 class Game{
 public:
@@ -35,17 +38,19 @@ private:
 	// The physical world -------------------------------------
 	b2Vec2 gravity_;
 	b2World world_;
+	MyContactListener contactListener_;
 
 	Ball theBall;
 	vector<Bouncer> windowLimits;
-	vector<Bouncer> bouncers;
+	vector<mySensor> sensors;
 
 #pragma region Physical world methods
 	void clearBouncers();
+	//void BeginContact(UserDataType userData, UserDataType userData1);
+	//void EndContact(UserDataType userData, UserDataType userData1);
 #pragma endregion
 
-
-	Vector2f mousePressedPos_bouncer, mouseReleasedPos_bouncer;
+	Vector2f mousePressedPos_sensor, mouseReleasedPos_sensor;
 	Vector2f mousePressedPos_ball, mouseReleasedPos_ball;
 
 };
