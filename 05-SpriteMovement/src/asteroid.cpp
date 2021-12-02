@@ -6,18 +6,17 @@
 #include "SFML_Utilities.h"
 #include <random>
 
-Asteroid::Asteroid(Game& game_, const std::string texturePath, const sf::Vector2f startPos, const float angle) : m_game(game_) {
+Asteroid::Asteroid(Game& game_, const sf::Vector2f startPos, const float angle) : m_game(game_) {
 
     std::random_device rd; // obtain a random number from hardware
     std::mt19937 generator(rd()); // seed the generator
     std::uniform_real_distribution<> rndVelocityX(0.0f, 1.0f); // define the range
     std::uniform_real_distribution<> rndVelocityY(0.0f, 1.0f); // define the range
 
+    TextureManager* texManager = TextureManager::Instance();
+    m_sprite.setTexture(texManager->getAsteroidTexture());
 
-	if (m_texture.loadFromFile(texturePath)) {
-        m_sprite.setTexture(m_texture);
-    }
-    m_sprite.setOrigin(0.5f * m_texture.getSize().x, 0.5f * m_texture.getSize().y);
+    m_sprite.setOrigin(0.5f * texManager->getAsteroidTexture().getSize().x, 0.5f * texManager->getAsteroidTexture().getSize().y);
 
     // Defing the box 2D elements
     b2BodyDef bodyDef;
@@ -29,7 +28,7 @@ Asteroid::Asteroid(Game& game_, const std::string texturePath, const sf::Vector2
 
     // Shape of the physical (A box)
     b2CircleShape hitBox;
-    hitBox.m_radius = pixelsToMeters(m_texture.getSize().x * 0.5f);
+    hitBox.m_radius = pixelsToMeters(texManager->getAsteroidTexture().getSize().x * 0.5f);
 
     // The fixture is what it defines the physic react
     b2FixtureDef playerFixtureDef;
@@ -58,7 +57,7 @@ Asteroid::~Asteroid()
 
 void Asteroid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	states.transform *= getTransform();
+    states.transform *= getTransform();
 	target.draw(m_sprite, states);
 }
 
@@ -66,8 +65,8 @@ void Asteroid::update()
 {
 
     // Set speed -------------------------------------------------------------------
-    //if (m_sprite.getTexture()->getSize().x <= 0) {
-        m_sprite.setTexture(m_texture);
+    //if (isTextureLoaded) {
+        //m_sprite.setTexture(m_texture);
     //}
     //body->SetLinearVelocity(linVelocity);
 

@@ -12,6 +12,8 @@
 #include "bouncer.h"
 #include "ship.h"
 
+#include "textureManager.h"
+
 class Game {
 public:
 	Game();

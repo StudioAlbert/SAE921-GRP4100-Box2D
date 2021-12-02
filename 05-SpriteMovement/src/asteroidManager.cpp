@@ -20,7 +20,6 @@ void AsteroidManager::AddAsteroid(Game& game_, sf::Vector2f startPos, float angl
 	asteroids.emplace_back(
 		Asteroid(
 			game_, 
-			"./data/asteroid.png",
 			startPos,
 			angle)
 	);

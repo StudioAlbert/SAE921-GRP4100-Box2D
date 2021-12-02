@@ -1,5 +1,6 @@
 #include "game.h"
 #include <random>
+#include <iostream>
 
 Game::Game() : 
 	m_gravity(0.0f, 0.0f),
@@ -10,7 +11,7 @@ Game::Game() :
 
 void Game::init() {
 
-	m_window.create(sf::VideoMode(1280, 720), "SAE Platformer");
+	m_window.create(sf::VideoMode(1280, 720), "Asteroid Spaceship");
 	m_window.setVerticalSyncEnabled(true);
 	m_window.setFramerateLimit(60.0f);
 
@@ -128,7 +129,7 @@ void Game::loop()
 		sf::Time elapsed = clock.restart();
 		collectedElapsed += elapsed;
 
-		if (collectedElapsed.asSeconds() > 10.0f) {
+		if (collectedElapsed.asSeconds() > 1.0f) {
 
 			sf::Vector2f rdnPos(rndX(generator), rndY(generator));
 
@@ -154,6 +155,9 @@ void Game::loop()
 		// Display all elements
 		m_window.display();
 #pragma endregion
+
+		TextureManager* texManager = TextureManager::Instance();
+		std::cout << texManager->getFerFerArgent() << std::endl;
 
 	}
 }
