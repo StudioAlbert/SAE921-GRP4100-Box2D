@@ -32,10 +32,9 @@ private:
 	Game& m_game;
 
 	sf::Sprite m_sprite;
-	sf::Texture m_texture;
 
 	b2Body* body = nullptr;
 
-	b2Vec2 linVelocity;
+	float life = 100.0f;
 
 };

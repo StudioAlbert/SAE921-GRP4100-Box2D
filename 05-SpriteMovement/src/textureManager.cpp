@@ -5,6 +5,7 @@ TextureManager* TextureManager::textureManager_ = nullptr;
 TextureManager::TextureManager()
 {
     m_asteroidTexture.loadFromFile("./data/Asteroid.png");
+    m_shipTexture.loadFromFile("./data/Ship.png");
 }
 
 
@@ -23,10 +24,9 @@ TextureManager* TextureManager::Instance()
     return textureManager_;
 }
 
-std::string TextureManager::getFerFerArgent() {
-    return ferFerArgent_;
-}
-
 sf::Texture& TextureManager::getAsteroidTexture() {
     return m_asteroidTexture;
+}
+sf::Texture& TextureManager::getShipTexture() {
+    return m_shipTexture;
 }

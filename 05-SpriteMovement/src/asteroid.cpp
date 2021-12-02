@@ -1,10 +1,11 @@
 #include <box2d/b2_body.h>
 
+#include <random>
+
 #include "asteroid.h"
 #include "game.h"
 
 #include "SFML_Utilities.h"
-#include <random>
 
 Asteroid::Asteroid(Game& game_, const sf::Vector2f startPos, const float angle) : m_game(game_) {
 

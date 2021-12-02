@@ -23,9 +23,8 @@ protected:
 
     static TextureManager* textureManager_;
 
-    std::string ferFerArgent_ = "FerFerArgent";
-
     sf::Texture m_asteroidTexture;
+    sf::Texture m_shipTexture;
 
 public:
 
@@ -48,9 +47,8 @@ public:
 
 
     // --------------------
-    std::string getFerFerArgent();
-
     sf::Texture& getAsteroidTexture();
+    sf::Texture& getShipTexture();
 
 };
 

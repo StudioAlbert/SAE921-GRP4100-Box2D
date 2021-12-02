@@ -156,8 +156,5 @@ void Game::loop()
 		m_window.display();
 #pragma endregion
 
-		TextureManager* texManager = TextureManager::Instance();
-		std::cout << texManager->getFerFerArgent() << std::endl;
-
 	}
 }

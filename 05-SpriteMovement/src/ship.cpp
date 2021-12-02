@@ -12,10 +12,9 @@ Ship::Ship(Game& game_) : m_game(game_)
 void Ship::init(sf::Vector2u winsize) {
 
     // Defining the shape
-    if (m_texture.loadFromFile("./data/Ship.png")) {
-        m_sprite.setTexture(m_texture);
-    }
-    m_sprite.setOrigin(m_texture.getSize().x * 0.5f, m_texture.getSize().y * 0.5f);
+    TextureManager* texManager = TextureManager::Instance();
+    m_sprite.setTexture(texManager->getShipTexture());
+    m_sprite.setOrigin(texManager->getShipTexture().getSize().x * 0.5f, texManager->getShipTexture().getSize().y * 0.5f);
     
     // Defing the box 2D elements
     b2BodyDef bodyDef;
@@ -29,7 +28,7 @@ void Ship::init(sf::Vector2u winsize) {
 
     // Shape of the physical (A box)
     b2PolygonShape hitBox;
-    hitBox.SetAsBox(0.5f * pixelsToMeters(m_texture.getSize().x), 0.5f * pixelsToMeters(m_texture.getSize().y));
+    hitBox.SetAsBox(0.5f * pixelsToMeters(texManager->getShipTexture().getSize().x), 0.5f * pixelsToMeters(texManager->getShipTexture().getSize().y));
 
     // The fixture is what it defines the physic react
     b2FixtureDef playerFixtureDef;
@@ -39,9 +38,6 @@ void Ship::init(sf::Vector2u winsize) {
     playerFixtureDef.restitution = 0.6f; // Make it bounce a little bit
     //playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(&playerBoxData);
     body->CreateFixture(&playerFixtureDef);
-
-
-    linVelocity = b2Vec2_zero;
 
 }
 
@@ -78,7 +74,6 @@ void Ship::move(sf::Vector2f _pixelsPosition, sf::Vector2f _velocity) {
     b2Vec2 vel = pixelsToMeters(_velocity);
 
     body->SetTransform(pos, 0.0f);
-    //body->SetLinearVelocity(vel);
 
 }
 
@@ -116,6 +111,7 @@ void Ship::rotateRight(float torque) {
 void Ship::ApplyTorqueWithCheck(float torque) {
 
     if (b2Abs(body->GetAngularVelocity()) < 0.5f) {
+
         body->ApplyTorque(torque, true);
 
         if (b2Abs(body->GetAngularVelocity()) < epsilon) {
