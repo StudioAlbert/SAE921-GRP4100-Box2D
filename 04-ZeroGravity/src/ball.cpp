@@ -41,13 +41,12 @@ void Ball::init() {
 
 void Ball::update() {
     
-    //std::cout << "Ball position [" << body->GetPosition().x << ":" << body->GetPosition().y 
-    //    << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
-    
     // Get the position of the body
     b2Vec2 bodyPos = body->GetPosition();
+
     // Translate meters to pixels
     sf::Vector2f graphicPosition = Game::metersToPixels(bodyPos);
+
     // Set the position of the Graphic object
 	shape.setPosition(graphicPosition);
 

@@ -6,6 +6,7 @@
 #include <cmath>
 
 #define M_PI 3.14159265358979323846
+constexpr float epsilon = 0.0001f;
 
 float dotProduct(sf::Vector2f vec1_, sf::Vector2f vec2_);
 
