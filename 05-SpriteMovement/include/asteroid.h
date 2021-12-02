@@ -1,6 +1,8 @@
 #pragma once
 
 #include <box2d/b2_body.h>
+
+#include "userData.h"
 #include "SFML/Graphics.hpp"
 
 class Game;
@@ -22,6 +24,7 @@ private:
 	sf::Sprite	m_sprite;
 	bool isTextureLoaded;
 
-	b2Body* body = nullptr;
+	b2Body* m_body = nullptr;
+	UserData* m_userData = new UserData(UserDataType::ASTEROID);
 
 };

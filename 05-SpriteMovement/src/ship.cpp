@@ -5,6 +5,9 @@
 #include "SFML_Utilities.h"
 #include <iostream>
 
+#include "textureManager.h"
+#include "userData.h"
+
 Ship::Ship(Game& game_) : m_game(game_)
 {
 }
@@ -12,6 +15,12 @@ Ship::Ship(Game& game_) : m_game(game_)
 float Ship::getLife() {
     return m_life;
 }
+
+void Ship::setDamages(float damages_)
+{
+    m_life -= damages_;
+}
+
 
 void Ship::init(sf::Vector2u winsize) {
 
@@ -28,11 +37,17 @@ void Ship::init(sf::Vector2u winsize) {
     bodyDef.position.Set(windowSize.x / 2.0f, windowSize.y / 2.0f);
     bodyDef.angularDamping = 0.75f;
     bodyDef.linearDamping = 0.75f;
+    bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
+    
     m_body = this->m_game.getWorld().CreateBody(&bodyDef);
+    //m_body->SetUserData(reinterpret_cast<void*>(&m_userData));
 
     // Shape of the physical (A box)
     b2PolygonShape hitBox;
-    hitBox.SetAsBox(0.5f * pixelsToMeters(texManager->getShipTexture().getSize().x), 0.5f * pixelsToMeters(texManager->getShipTexture().getSize().y));
+    hitBox.SetAsBox(
+        0.5f * pixelsToMeters(texManager->getShipTexture().getSize().x), 
+        0.5f * pixelsToMeters(texManager->getShipTexture().getSize().y)
+    );
 
     // The fixture is what it defines the physic react
     b2FixtureDef playerFixtureDef;
@@ -40,8 +55,8 @@ void Ship::init(sf::Vector2u winsize) {
     playerFixtureDef.density = 1.0f;
     playerFixtureDef.friction = 0.0f;
     playerFixtureDef.restitution = 0.6f; // Make it bounce a little bit
-    //playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(&playerBoxData);
-    m_body->CreateFixture(&playerFixtureDef);
+    //playerFixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(&m_userData);
+	m_body->CreateFixture(&playerFixtureDef);
 
 }
 
@@ -61,8 +76,6 @@ void Ship::update() {
 
     float angle = m_body->GetAngle();
     setRotation(radToDeg(angle));
-
-    std::cout << "Angular velocity : " << m_body->GetAngularVelocity() << std::endl;
 
 }
 

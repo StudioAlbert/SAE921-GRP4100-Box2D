@@ -1,5 +1,6 @@
 #pragma once
 
+#include "userData.h"
 #include "SFML/Graphics.hpp"
 #include "box2d/box2d.h"
 
@@ -30,6 +31,7 @@ public:
 
 	// getters
 	float getLife();
+	void setDamages(float damages_);
 	constexpr float lifeMax() { return 100.0f; };
 
 private:
@@ -38,6 +40,7 @@ private:
 	sf::Sprite m_sprite;
 
 	b2Body* m_body = nullptr;
+	UserData* m_userData = new UserData(UserDataType::SHIP);
 
 	float m_life = 100.0f;
 

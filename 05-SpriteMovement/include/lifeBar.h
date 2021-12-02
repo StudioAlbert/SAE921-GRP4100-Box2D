@@ -16,7 +16,8 @@ public:
 	void setLife(float life_);
 
 private:
-	sf::RectangleShape m_lifeBar;
+	sf::RectangleShape m_lifeBarFill;
+	sf::RectangleShape m_lifeBarContour;
 	float m_lifeMax;
 	float m_life;
 };

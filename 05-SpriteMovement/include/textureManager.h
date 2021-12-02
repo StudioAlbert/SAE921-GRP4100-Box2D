@@ -25,6 +25,7 @@ protected:
 
     sf::Texture m_asteroidTexture;
     sf::Texture m_shipTexture;
+    sf::Texture m_gameOverTexture;
 
 public:
 
@@ -49,6 +50,7 @@ public:
     // --------------------
     sf::Texture& getAsteroidTexture();
     sf::Texture& getShipTexture();
+    sf::Texture& getGameOverTexture();
 
 };
 

@@ -2,16 +2,10 @@
 #include "SFML/Graphics.hpp"
 #include <box2d/b2_math.h>
 
-//#include <cmath>
-//#define _MATH_DEFINES_DEFINED
-//#define _USE_MATH_DEFINES // for C++
+#define _USE_MATH_DEFINES // for C++
+#include <math.h>
 
 //#define M_PI 3.14159265358979323846
-
-//#define _USE_MATH_DEFINES
-//#include <cmath> 
-
-#include <corecrt_math_defines.h>
 
 // Maths vector elements -----------------------------------------------------
 float dotProduct(sf::Vector2f vec1_, sf::Vector2f vec2_);

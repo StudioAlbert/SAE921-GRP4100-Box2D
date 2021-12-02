@@ -6,6 +6,7 @@
 #include "game.h"
 
 #include "SFML_Utilities.h"
+#include "textureManager.h"
 
 Asteroid::Asteroid(Game& game_, const sf::Vector2f startPos, const float angle) : m_game(game_) {
 
@@ -25,8 +26,10 @@ Asteroid::Asteroid(Game& game_, const sf::Vector2f startPos, const float angle) 
     bodyDef.type = b2_dynamicBody;
     bodyDef.angularDamping = 0.01f;
     bodyDef.linearDamping = 0.01f;
-    body = this->m_game.getWorld().CreateBody(&bodyDef);
+	bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
 
+    m_body = this->m_game.getWorld().CreateBody(&bodyDef);
+    
     // Shape of the physical (A box)
     b2CircleShape hitBox;
     hitBox.m_radius = pixelsToMeters(texManager->getAsteroidTexture().getSize().x * 0.5f);
@@ -37,15 +40,15 @@ Asteroid::Asteroid(Game& game_, const sf::Vector2f startPos, const float angle) 
     playerFixtureDef.density = 1.0f;
     playerFixtureDef.friction = 0.0f;
     playerFixtureDef.restitution = 0.6f; // Make it bounce a little bit
-    //playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(&playerBoxData);
-    body->CreateFixture(&playerFixtureDef);
+
+    m_body->CreateFixture(&playerFixtureDef);
 
     // Set angle and velocity
     b2Vec2 physicalStartPos = pixelsToMeters(sf::Vector2f(startPos.x, startPos.y));
-    body->SetTransform(physicalStartPos, angle);
+    m_body->SetTransform(physicalStartPos, angle);
 
     b2Vec2 initialVelocity = b2Vec2(rndVelocityX(generator), rndVelocityY(generator));
-    body->SetLinearVelocity(initialVelocity);
+    m_body->SetLinearVelocity(initialVelocity);
 
     update();
 
@@ -72,7 +75,7 @@ void Asteroid::update()
     //body->SetLinearVelocity(linVelocity);
 
     // Get the position of the body
-    b2Vec2 bodyPos = body->GetPosition();
+    b2Vec2 bodyPos = m_body->GetPosition();
 
     // Translate meters to pixels
     sf::Vector2f graphicPosition = metersToPixels(bodyPos);
@@ -80,7 +83,7 @@ void Asteroid::update()
     // Set the position of the Graphic object
     setPosition(graphicPosition);
 
-    float angle = body->GetAngle();
+    float angle = m_body->GetAngle();
     setRotation(radToDeg(angle));
 
 }

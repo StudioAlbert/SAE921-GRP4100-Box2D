@@ -18,7 +18,10 @@ void Bouncer::init(sf::Vector2f pos_, sf::Vector2f size_) {
     bodyDef.type = b2BodyType::b2_staticBody; // Static !!! it does not move when something collides
     bodyDef.position.Set(pixelsToMeters(pos_).x, pixelsToMeters(pos_).y);
     bodyDef.angle = 0.0f;
-    body = this->game.getWorld().CreateBody(&bodyDef);
+    bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
+
+    m_body = this->game.getWorld().CreateBody(&bodyDef);
+    //m_body->SetUserData(reinterpret_cast<void*>(&m_userData));
 
     //set this Ball object in the body's user data
 
@@ -37,7 +40,8 @@ void Bouncer::init(sf::Vector2f pos_, sf::Vector2f size_) {
     playerFixtureDef.density = 1.0f;
     playerFixtureDef.friction = 0.2f;
     playerFixtureDef.restitution = 0.01f; // Make it bounce a little bit
-    body->CreateFixture(&playerFixtureDef);
+
+    m_body->CreateFixture(&playerFixtureDef);
 
     // Defining the shape
     m_shape.setSize(size_);
@@ -48,9 +52,9 @@ void Bouncer::init(sf::Vector2f pos_, sf::Vector2f size_) {
 
 void Bouncer::update() {
 
-    const auto& b2Position = body->GetPosition();
+    const auto& b2Position = m_body->GetPosition();
     m_shape.setPosition(metersToPixels(b2Position));
-    const auto b2rotation = body->GetAngle();
+    const auto b2rotation = m_body->GetAngle();
     m_shape.setRotation(-1.0f * radToDeg(b2rotation));
     
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "userData.h"
 #include "SFML/Graphics.hpp"
 #include "box2d/box2d.h"
 
@@ -13,7 +14,7 @@ public:
 	void init(sf::Vector2f, sf::Vector2f);
 	void update();
 
-	b2Body* getBody(){ return body; };
+	b2Body* getBody(){ return m_body; };
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
@@ -23,8 +24,9 @@ private:
 
 	// Graphic object
 	sf::RectangleShape m_shape;
+	UserData* m_userData = new UserData(UserDataType::LIMIT);
 
 	// The box 2D object
-	b2Body* body = nullptr;
+	b2Body* m_body = nullptr;
 
 };

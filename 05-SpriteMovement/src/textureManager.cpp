@@ -6,6 +6,7 @@ TextureManager::TextureManager()
 {
     m_asteroidTexture.loadFromFile("./data/Asteroid.png");
     m_shipTexture.loadFromFile("./data/Ship.png");
+    m_gameOverTexture.loadFromFile("./data/GameOver.png");
 }
 
 
@@ -29,4 +30,8 @@ sf::Texture& TextureManager::getAsteroidTexture() {
 }
 sf::Texture& TextureManager::getShipTexture() {
     return m_shipTexture;
+}
+sf::Texture& TextureManager::getGameOverTexture()
+{
+    return m_gameOverTexture;
 }
