@@ -13,6 +13,7 @@
 #include "ship.h"
 
 #include "textureManager.h"
+#include <lifeBar.h>
 
 class Game {
 public:
@@ -24,19 +25,24 @@ public:
 
 private:
 
+	bool m_debugMode;
+
 	// The window ---------------------------------------------
 	sf::RenderWindow m_window;
 
 	// The physical world -------------------------------------
 	b2Vec2 m_gravity;
 	b2World m_world;
-	std::vector<Bouncer> windowLimits;
+	std::vector<Bouncer> m_windowLimits;
 
 	// The game entities --------------------------------------
 	Ship m_ship;
 	AsteroidManager m_asteroidManager;
 
-	sf::Vector2f mousePressedPos_sensor, mouseReleasedPos_sensor;
-	sf::Vector2f mousePressedPos_ball, mouseReleasedPos_ball;
+	// The ui entities
+	LifeBar m_lifeBar = LifeBar(100.0f);
+
+	sf::Vector2f m_mousePressedPos_sensor, m_mouseReleasedPos_sensor;
+	sf::Vector2f m_mousePressedPos_ball, m_mouseReleasedPos_ball;
 
 };

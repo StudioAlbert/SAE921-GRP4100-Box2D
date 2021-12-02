@@ -9,6 +9,10 @@ Ship::Ship(Game& game_) : m_game(game_)
 {
 }
 
+float Ship::getLife() {
+    return m_life;
+}
+
 void Ship::init(sf::Vector2u winsize) {
 
     // Defining the shape
@@ -24,7 +28,7 @@ void Ship::init(sf::Vector2u winsize) {
     bodyDef.position.Set(windowSize.x / 2.0f, windowSize.y / 2.0f);
     bodyDef.angularDamping = 0.75f;
     bodyDef.linearDamping = 0.75f;
-    body = this->m_game.getWorld().CreateBody(&bodyDef);
+    m_body = this->m_game.getWorld().CreateBody(&bodyDef);
 
     // Shape of the physical (A box)
     b2PolygonShape hitBox;
@@ -37,7 +41,7 @@ void Ship::init(sf::Vector2u winsize) {
     playerFixtureDef.friction = 0.0f;
     playerFixtureDef.restitution = 0.6f; // Make it bounce a little bit
     //playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(&playerBoxData);
-    body->CreateFixture(&playerFixtureDef);
+    m_body->CreateFixture(&playerFixtureDef);
 
 }
 
@@ -47,7 +51,7 @@ void Ship::update() {
     //body->SetLinearVelocity(linVelocity);
 
     // Get the position of the body
-    b2Vec2 bodyPos = body->GetPosition();
+    b2Vec2 bodyPos = m_body->GetPosition();
 
     // Translate meters to pixels
     sf::Vector2f graphicPosition = metersToPixels(bodyPos);
@@ -55,10 +59,10 @@ void Ship::update() {
     // Set the position of the Graphic object
     setPosition(graphicPosition);
 
-    float angle = body->GetAngle();
+    float angle = m_body->GetAngle();
     setRotation(radToDeg(angle));
 
-    std::cout << "Angular velocity : " << body->GetAngularVelocity() << std::endl;
+    std::cout << "Angular velocity : " << m_body->GetAngularVelocity() << std::endl;
 
 }
 
@@ -73,7 +77,7 @@ void Ship::move(sf::Vector2f _pixelsPosition, sf::Vector2f _velocity) {
     b2Vec2 pos = pixelsToMeters(_pixelsPosition);
     b2Vec2 vel = pixelsToMeters(_velocity);
 
-    body->SetTransform(pos, 0.0f);
+    m_body->SetTransform(pos, 0.0f);
 
 }
 
@@ -88,13 +92,13 @@ void Ship::speedDown(float forceValue) {
 void Ship::ApplyLocalForceWithCheck(float forceValue) {
 
     b2Vec2 force(0.0, forceValue);
-    b2Vec2 localForce = body->GetLocalVector(force);
+    b2Vec2 localForce = m_body->GetLocalVector(force);
 
-    if (b2Abs(body->GetLinearVelocity().Length()) < 5.0f) {
-        body->ApplyForceToCenter(localForce, true);
+    if (b2Abs(m_body->GetLinearVelocity().Length()) < 5.0f) {
+        m_body->ApplyForceToCenter(localForce, true);
 
-        if (b2Abs(body->GetLinearVelocity().Length()) < epsilon) {
-            body->SetLinearVelocity(b2Vec2_zero);
+        if (b2Abs(m_body->GetLinearVelocity().Length()) < epsilon) {
+            m_body->SetLinearVelocity(b2Vec2_zero);
         }
     }
 
@@ -110,12 +114,12 @@ void Ship::rotateRight(float torque) {
 
 void Ship::ApplyTorqueWithCheck(float torque) {
 
-    if (b2Abs(body->GetAngularVelocity()) < 0.5f) {
+    if (b2Abs(m_body->GetAngularVelocity()) < 0.5f) {
 
-        body->ApplyTorque(torque, true);
+        m_body->ApplyTorque(torque, true);
 
-        if (b2Abs(body->GetAngularVelocity()) < epsilon) {
-            body->SetAngularVelocity(0.0f);
+        if (b2Abs(m_body->GetAngularVelocity()) < epsilon) {
+            m_body->SetAngularVelocity(0.0f);
         }
 
     }

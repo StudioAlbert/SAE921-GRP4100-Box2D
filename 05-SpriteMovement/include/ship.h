@@ -28,13 +28,17 @@ public:
 	// DRAWABLE OVERRIDES
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	// getters
+	float getLife();
+	constexpr float lifeMax() { return 100.0f; };
+
 private:
 	Game& m_game;
 
 	sf::Sprite m_sprite;
 
-	b2Body* body = nullptr;
+	b2Body* m_body = nullptr;
 
-	float life = 100.0f;
+	float m_life = 100.0f;
 
 };

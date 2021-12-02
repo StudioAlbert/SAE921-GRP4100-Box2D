@@ -20,7 +20,7 @@ void Game::init() {
 
 	// Add a bouncer
 // TOP LIMIT -------------------------------------------
-	windowLimits.push_back(
+	m_windowLimits.push_back(
 		Bouncer(
 			*this,
 			sf::Vector2f(0.5f * m_window.getSize().x, 0.0f),
@@ -28,7 +28,7 @@ void Game::init() {
 		)
 	);
 	// BOTTOM LIMIT -------------------------------------------
-	windowLimits.push_back(
+	m_windowLimits.push_back(
 		Bouncer(
 			*this,
 			sf::Vector2f(0.5f * m_window.getSize().x, m_window.getSize().y),
@@ -36,7 +36,7 @@ void Game::init() {
 		)
 	);
 	// LEFT LIMIT -------------------------------------------
-	windowLimits.push_back(
+	m_windowLimits.push_back(
 		Bouncer(
 			*this,
 			sf::Vector2f(0.0f, 0.5f * m_window.getSize().y),
@@ -44,13 +44,15 @@ void Game::init() {
 		)
 	);
 	// RIGHT LIMIT -------------------------------------------
-	windowLimits.push_back(
+	m_windowLimits.push_back(
 		Bouncer(
 			*this,
 			sf::Vector2f(m_window.getSize().x, 0.5f * m_window.getSize().y),
 			sf::Vector2f(10.0f, m_window.getSize().y)
 		)
 	);
+
+	m_debugMode = false;
 
 }
 
@@ -89,7 +91,10 @@ void Game::loop()
 			// Mouse events ---------------------------------------------------------------------------------
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
-
+				if(event.KeyReleased == sf::Keyboard::Key::D)
+				{
+					m_debugMode = !m_debugMode;
+				}
 			}
 		}
 
@@ -113,17 +118,24 @@ void Game::loop()
 
 
 #pragma region Physical process
+
 		// Updating the world with a delay
 		float timeStep = 1.0f / 60.0f;
 		int32 velocityIterations = 6;
 		int32 positionIterations = 2;
 		m_world.Step(timeStep, velocityIterations, positionIterations);
 
+		// Update the ship
 		m_ship.update();
+		// Udpate asteroids
 		m_asteroidManager.update();
-		for (auto& b : windowLimits) {
+		// Update limits
+		for (auto& b : m_windowLimits) {
 			b.update();
 		}
+		// Update Life bars with the lif of the ship
+		m_lifeBar.setLife(m_ship.getLife());
+		m_lifeBar.update();
 
 		// Tick every 1.0sec
 		sf::Time elapsed = clock.restart();
@@ -147,11 +159,18 @@ void Game::loop()
 		// Clear all background
 		m_window.clear();
 
+		// DRWA THINGS ----------------------------------------------------------
+		// Draw the ship
 		m_window.draw(m_ship);
+		// Draw asteroids
 		m_window.draw(m_asteroidManager);
-		for (auto& b : windowLimits) {
+		// Draw limits
+		for (auto& b : m_windowLimits) {
 			m_window.draw(b);
 		}
+		// Draw Life bar
+		m_window.draw(m_lifeBar);
+
 		// Display all elements
 		m_window.display();
 #pragma endregion

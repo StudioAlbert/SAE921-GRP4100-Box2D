@@ -11,8 +11,8 @@ Asteroid::Asteroid(Game& game_, const sf::Vector2f startPos, const float angle) 
 
     std::random_device rd; // obtain a random number from hardware
     std::mt19937 generator(rd()); // seed the generator
-    std::uniform_real_distribution<> rndVelocityX(0.0f, 1.0f); // define the range
-    std::uniform_real_distribution<> rndVelocityY(0.0f, 1.0f); // define the range
+    std::uniform_real_distribution<> rndVelocityX(-1.0f, 1.0f); // define the range
+    std::uniform_real_distribution<> rndVelocityY(-1.0f, 1.0f); // define the range
 
     TextureManager* texManager = TextureManager::Instance();
     m_sprite.setTexture(texManager->getAsteroidTexture());
