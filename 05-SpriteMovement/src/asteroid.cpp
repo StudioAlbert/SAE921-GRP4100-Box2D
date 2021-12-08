@@ -1,14 +1,8 @@
-#include <box2d/b2_body.h>
-
-#include <random>
-
 #include "asteroid.h"
-#include "game.h"
 
-#include "SFML_Utilities.h"
-#include "textureManager.h"
+long Asteroid::m_localIdAsteroid = 0;
 
-Asteroid::Asteroid(Game& game_, const sf::Vector2f startPos, const float angle) : m_game(game_) {
+Asteroid::Asteroid(b2World& world_, const sf::Vector2f startPos, const float angle){
 
     std::random_device rd; // obtain a random number from hardware
     std::mt19937 generator(rd()); // seed the generator
@@ -26,9 +20,11 @@ Asteroid::Asteroid(Game& game_, const sf::Vector2f startPos, const float angle) 
     bodyDef.type = b2_dynamicBody;
     bodyDef.angularDamping = 0.01f;
     bodyDef.linearDamping = 0.01f;
+    // Set Datas
+    m_userData->setLocalId(getGlobalId());
 	bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
 
-    m_body = this->m_game.getWorld().CreateBody(&bodyDef);
+    m_body = world_.CreateBody(&bodyDef);
     
     // Shape of the physical (A box)
     b2CircleShape hitBox;
@@ -54,11 +50,6 @@ Asteroid::Asteroid(Game& game_, const sf::Vector2f startPos, const float angle) 
 
 }
 
-Asteroid::~Asteroid()
-{
-	//m_texture.~Texture();
-}
-
 void Asteroid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
@@ -67,12 +58,6 @@ void Asteroid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Asteroid::update()
 {
-
-    // Set speed -------------------------------------------------------------------
-    //if (isTextureLoaded) {
-        //m_sprite.setTexture(m_texture);
-    //}
-    //body->SetLinearVelocity(linVelocity);
 
     // Get the position of the body
     b2Vec2 bodyPos = m_body->GetPosition();
@@ -86,4 +71,22 @@ void Asteroid::update()
     float angle = m_body->GetAngle();
     setRotation(radToDeg(angle));
 
+}
+
+void Asteroid::setIsDead()
+{
+    m_isDead = true;
+}
+bool Asteroid::getIsDead()
+{
+    return m_isDead;
+}
+
+long Asteroid::getLocalId()
+{
+    return m_userData->getLocalId();
+}
+long Asteroid::getGlobalId()
+{
+    return m_localIdAsteroid++;
 }

@@ -9,6 +9,20 @@ float determinant(sf::Vector2f vec1_, sf::Vector2f vec2_) {
     return vec1_.x * vec2_.y - vec1_.y * vec2_.x;
 }
 
+sf::Vector2f normalize(const sf::Vector2f& vec) {
+
+    float fMagnitude = vecLength(vec);
+
+    if (fMagnitude > 0) {
+        return sf::Vector2f(vec.x / fMagnitude, vec.y / fMagnitude);
+    }
+    else {
+        return sf::Vector2f(0, 0);
+    }
+}
+
+
+
 float vecLength(sf::Vector2f vec_) {
     return std::sqrt(vec_.x * vec_.x + vec_.y * vec_.y);
 }

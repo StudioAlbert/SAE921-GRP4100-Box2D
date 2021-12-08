@@ -10,7 +10,9 @@ Game::Game() :
 	m_gravity(0.0f, 0.0f),
 	m_world(m_gravity),
 	m_ship(*this),
-	m_contacts(*this)
+	m_contacts(*this),
+	m_missileManager(m_world),
+	m_asteroidManager(m_world)
 {
 }
 
@@ -95,10 +97,20 @@ void Game::loop()
 			// Mouse events ---------------------------------------------------------------------------------
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
-				if(event.KeyReleased == sf::Keyboard::Key::D)
+			}
+
+			// Keyboard event
+			if(event.type == sf::Event::KeyReleased)
+			{
+				if (event.key.code == sf::Keyboard::Key::D)
 				{
 					m_debugMode = !m_debugMode;
 				}
+				if (event.key.code == sf::Keyboard::Key::Space)
+				{
+					m_missileManager.AddMissile(m_ship);
+				}
+
 			}
 		}
 
@@ -157,6 +169,7 @@ void Game::update()
 
 	// Udpate asteroids
 	m_asteroidManager.update();
+	m_missileManager.update();
 	// Update limits
 	for (auto& b : m_windowLimits) {
 		b.update();
@@ -177,7 +190,7 @@ void Game::update()
 		sf::Vector2f rdnPos(rndX(generator), rndY(generator));
 
 		// Pop an asteroid
-		m_asteroidManager.AddAsteroid(*this, rdnPos, rndAngle(generator));
+		m_asteroidManager.AddAsteroid(rdnPos, rndAngle(generator));
 
 		collectedElapsed = sf::Time::Zero;
 
@@ -196,6 +209,8 @@ void Game::draw()
 
 	// Draw asteroids
 	m_window.draw(m_asteroidManager);
+	m_window.draw(m_missileManager);
+
 	// Draw limits
 	if (m_debugMode)
 	{
@@ -211,4 +226,20 @@ void Game::draw()
 
 	// Display all elements
 	m_window.display();
+}
+
+void Game::setDamagesToShip(float damages_)
+{
+	m_ship.setDamages(damages_);
+}
+
+void Game::putAsteroidToDeath(int idAsteroid_)
+{
+	m_asteroidManager.putAsteroidToDeath(idAsteroid_);
+	std::cout << "Asteroid " << idAsteroid_ << " sent to death." << std::endl;
+}
+void Game::putMissileToDeath(int idMissile_)
+{
+	m_missileManager.putMissileToDeath(idMissile_);
+	std::cout << "Missile " << idMissile_ << " sent to death." << std::endl;
 }

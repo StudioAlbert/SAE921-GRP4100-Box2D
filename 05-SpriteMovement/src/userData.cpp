@@ -7,7 +7,7 @@ UserData::UserData()
 
 UserData::UserData(UserDataType type_) : m_type(type_)
 {
-	
+	m_localId = -1;
 }
 
 UserDataType UserData::getUserDataType()
@@ -15,11 +15,15 @@ UserDataType UserData::getUserDataType()
 	return m_type;
 }
 
-//void UserData::setUserDataType(UserDataType type_)
-//{
-//	m_type = type_;
-//}
-//
+void UserData::setLocalId(signed long id_)
+{
+	m_localId = id_;
+}
+
+signed long UserData::getLocalId()
+{
+	return m_localId;
+}
 
 const std::string UserData::UserDataTypeToString(UserDataType type_)
 {

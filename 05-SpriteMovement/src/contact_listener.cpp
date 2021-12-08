@@ -18,15 +18,25 @@ void MyContactListener::BeginContact(b2Contact* contact)
     UserData* A_Data = reinterpret_cast<UserData*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
     UserData* B_Data = reinterpret_cast<UserData*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
 
-    std::cout << "A Fixture : " << UserData::UserDataTypeToString(A_Data->getUserDataType()) << std::endl;
-    std::cout << "B Fixture : " << UserData::UserDataTypeToString(B_Data->getUserDataType()) << std::endl;
+    std::cout << "A Fixture : " << UserData::UserDataTypeToString(A_Data->getUserDataType()) << ":[id=" << A_Data->getLocalId() << "]" << std::endl;
+    std::cout << "B Fixture : " << UserData::UserDataTypeToString(B_Data->getUserDataType()) << ":[id=" << B_Data->getLocalId() << "]" << std::endl;
 
-    if(
-        (A_Data->getUserDataType()==UserDataType::ASTEROID && B_Data->getUserDataType() == UserDataType::SHIP)
-        || 
-        (A_Data->getUserDataType() == UserDataType::SHIP && B_Data->getUserDataType() == UserDataType::ASTEROID))
+    if (A_Data->getUserDataType() == UserDataType::ASTEROID || B_Data->getUserDataType() == UserDataType::ASTEROID)
     {
-        game_.getShip().setDamages(5);
+
+    	if (B_Data->getUserDataType() == UserDataType::MISSILE || A_Data->getUserDataType() == UserDataType::MISSILE)
+        {
+            if (A_Data->getUserDataType() == UserDataType::ASTEROID)
+            {
+                game_.putAsteroidToDeath(A_Data->getLocalId());
+                game_.putMissileToDeath(B_Data->getLocalId());
+            }
+            else
+            {
+                game_.putAsteroidToDeath(B_Data->getLocalId());
+                game_.putMissileToDeath(A_Data->getLocalId());
+            }
+        }
 
     }
 
@@ -36,7 +46,17 @@ void MyContactListener::EndContact(b2Contact* contact)
 {
     std::cout << "Contact End!" << std::endl;
 
-    UserData* A_Data = reinterpret_cast<UserData*>(contact->GetFixtureA()->GetUserData().pointer);
-    UserData* B_Data = reinterpret_cast<UserData*>(contact->GetFixtureB()->GetUserData().pointer);
+    UserData* A_Data = reinterpret_cast<UserData*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
+    UserData* B_Data = reinterpret_cast<UserData*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
+
+    std::cout << "A Fixture : " << UserData::UserDataTypeToString(A_Data->getUserDataType()) << ":[id=" << A_Data->getLocalId() << "]" << std::endl;
+    std::cout << "B Fixture : " << UserData::UserDataTypeToString(B_Data->getUserDataType()) << ":[id=" << B_Data->getLocalId() << "]" << std::endl;
+
+    if (A_Data->getUserDataType() == UserDataType::ASTEROID || B_Data->getUserDataType() == UserDataType::ASTEROID)
+    {
+        if (B_Data->getUserDataType() == UserDataType::SHIP || A_Data->getUserDataType() == UserDataType::SHIP)
+            game_.setDamagesToShip(5);
+
+    }
 
 }

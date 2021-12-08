@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "box2d/box2d.h"
-
 enum UserDataType : char
 {
     SHIP = 's',
@@ -23,7 +21,11 @@ public:
     static const std::string UserDataTypeToString(UserDataType type_);
 
     UserDataType getUserDataType();
+    signed long getLocalId();
+    void setLocalId(signed long id_);
 
 private:
     UserDataType m_type;
+    signed long m_localId;
+
 };

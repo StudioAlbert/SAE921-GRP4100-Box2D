@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 
 #include "SFML/Graphics/RenderWindow.hpp"
@@ -8,10 +9,11 @@
 #include "bouncer.h"
 #include "contact_listener.h"
 #include "lifeBar.h"
+#include "missileManager.h"
 #include "ship.h"
 
-
 class Game {
+
 public:
 	Game();
 	void init();
@@ -19,6 +21,11 @@ public:
 
 	b2World& getWorld() { return m_world; };
 	Ship& getShip() { return m_ship; };
+
+	void setDamagesToShip(float damages_);
+	void putAsteroidToDeath(int idAsteroid_);
+	void putMissileToDeath(int idMissile_);
+
 
 private:
 
@@ -38,6 +45,7 @@ private:
 	// The game entities --------------------------------------
 	Ship m_ship;
 	AsteroidManager m_asteroidManager;
+	MissileManager m_missileManager;
 
 	// The ui entities
 	LifeBar m_lifeBar = LifeBar(100.0f);
