@@ -7,6 +7,8 @@
 
 Bouncer::Bouncer(b2World& world_, sf::Vector2f pos_, sf::Vector2f size_) : Box2DEntity(world_)
 {
+    init(pos_, size_);
+}
 
     createFixture(pixelsToMeters(size_.x), pixelsToMeters(size_.y));
 
@@ -26,6 +28,7 @@ void Bouncer::createFixture(const float sizeX, const float sizeY)
     b2PolygonShape bouncerBox;
     bouncerBox.SetAsBox(sizeX, sizeY);
 
+    // The fixture is what it defines the physic react
     b2FixtureDef playerFixtureDef;
     playerFixtureDef.shape = &bouncerBox;
     playerFixtureDef.density = 1.0f;
@@ -33,10 +36,21 @@ void Bouncer::createFixture(const float sizeX, const float sizeY)
     playerFixtureDef.restitution = 0.01f; // Make it bounce a little bit
 
     m_body->CreateFixture(&playerFixtureDef);
+
+    // Defining the shape
+    m_shape.setSize(size_);
+    m_shape.setFillColor(sf::Color::Cyan);
+    m_shape.setOrigin(0.5f * size_.x, 0.5f * size_.y);
+
 }
 
+void Bouncer::update() {
 
-
+    const auto& b2Position = m_body->GetPosition();
+    m_shape.setPosition(metersToPixels(b2Position));
+    const auto b2rotation = m_body->GetAngle();
+    m_shape.setRotation(-1.0f * radToDeg(b2rotation));
+    
 //void Bouncer::update() {
 //
 //    const auto& b2Position = m_body->GetPosition();

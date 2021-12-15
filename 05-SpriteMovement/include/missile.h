@@ -1,4 +1,8 @@
 #pragma once
+#include <box2d/b2_world.h>
+#include <box2d/b2_body.h>
+#include <box2d/b2_shape.h>
+#include <box2d/b2_fixture.h>
 
 #include "core/box2DEntity.h"
 
@@ -19,6 +23,9 @@ public:
 
 private:
 	sf::Sprite	m_sprite;
+
+	b2Body* m_body = nullptr;
+	UserData* m_userData = new UserData(UserDataType::MISSILE);
 
 	bool m_isDead = false;
 

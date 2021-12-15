@@ -8,7 +8,9 @@ Missile::Missile(b2World& world_, const sf::Vector2f startPos_, const float angl
 {
     createFixture(pixelsToMeters(texManager->getMissileTexture().getSize().x), pixelsToMeters(texManager->getMissileTexture().getSize().y));
 
+    TextureManager* texManager = TextureManager::Instance();
     m_sprite.setTexture(texManager->getMissileTexture());
+
     m_sprite.setOrigin(0.5f * texManager->getMissileTexture().getSize().x, 0.5f * texManager->getMissileTexture().getSize().y);
 
     // Defing the box 2D elements
@@ -52,6 +54,15 @@ void Missile::createFixture(const float sizeX, const float sizeY)
     playerFixtureDef.isSensor = true;
 
     m_body->CreateFixture(&playerFixtureDef);
+
+    // Set angle, velocity and position -----------------------------
+    b2Vec2 physicalStartPos = b2Vec2(pixelsToMeters(startPos_).x, pixelsToMeters(startPos_).y + 0.15f);
+    m_body->SetTransform(physicalStartPos, degToRad(angle_ - 90.0f));
+
+    b2Vec2 initialVelocity = m_body->GetLocalVector(b2Vec2(5.0f , 0.0f));
+    m_body->SetLinearVelocity(initialVelocity);
+
+    update();
 
 }
 

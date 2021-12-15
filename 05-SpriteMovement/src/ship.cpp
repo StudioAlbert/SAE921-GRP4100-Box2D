@@ -2,25 +2,33 @@
 #include "game.h"
 #include "ship.h"
 
+#include "SFML_Utilities.h"
 #include <iostream>
 
 #include "core/SFML_Utilities.h"
 #include "core/userData.h"
 #include "managers/textureManager.h"
 
+Ship::Ship(Game& game_) : m_game(game_)
+{
+}
 
 Ship::Ship(b2World& world_) : Box2DEntity(world_)
 {
     createFixture(pixelsToMeters(texManager->getShipTexture().getSize().x), pixelsToMeters(texManager->getShipTexture().getSize().y));
 
-	// Defining the shape
+
+void Ship::init(sf::Vector2u winsize) {
+
+    // Defining the shape
+    TextureManager* texManager = TextureManager::Instance();
     m_sprite.setTexture(texManager->getShipTexture());
     m_sprite.setOrigin(texManager->getShipTexture().getSize().x * 0.5f, texManager->getShipTexture().getSize().y * 0.5f);
-
+    
     // Set Datas
     m_userData->setLocalId(-1);
     m_userData->setType(UserDataType::SHIP);
-
+    
     m_body->SetLinearDamping(0.5f);
     m_body->SetAngularDamping(0.25f);
 
@@ -28,7 +36,7 @@ Ship::Ship(b2World& world_) : Box2DEntity(world_)
 
 void Ship::createFixture(const float sizeX, const float sizeY) {
 
-	// Shape of the physical (A box)
+    // Shape of the physical (A box)
     b2PolygonShape hitBox;
     hitBox.SetAsBox(0.5f * sizeX, 0.5f * sizeY);
 
@@ -39,7 +47,7 @@ void Ship::createFixture(const float sizeX, const float sizeY) {
     playerFixtureDef.friction = 0.0f;
     playerFixtureDef.restitution = 0.6f; // Make it bounce a little bit
     //playerFixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(&m_userData);
-    m_body->CreateFixture(&playerFixtureDef);
+	m_body->CreateFixture(&playerFixtureDef);
 
 }
 
@@ -79,6 +87,14 @@ void Ship::move(sf::Vector2f _pixelsPosition, sf::Vector2f _velocity) {
 }
 
 void Ship::speedUp(float forceValue) {
+    ApplyLocalForceWithCheck(1.0f * forceValue);
+}
+
+void Ship::speedDown(float forceValue) {
+    ApplyLocalForceWithCheck(-1.0f * forceValue);
+}
+
+void Ship::ApplyLocalForceWithCheck(float forceValue) {
 
     b2Vec2 force(0.0, forceValue);
     b2Vec2 localForce = m_body->GetWorldVector(force);
@@ -90,7 +106,10 @@ void Ship::speedUp(float forceValue) {
         m_body->ApplyForceToCenter(localForce, true);
     }
 
-}
+        if (b2Abs(m_body->GetLinearVelocity().Length()) < epsilon) {
+            m_body->SetLinearVelocity(b2Vec2_zero);
+        }
+    }
 
 void Ship::speedDown(float forceValue)
 {

@@ -7,9 +7,17 @@ Asteroid::Asteroid(b2World& world_, sf::Vector2f size_) : Box2DEntity(world_)
 
     createFixture(pixelsToMeters(size_.x), pixelsToMeters(size_.y));
 
+    TextureManager* texManager = TextureManager::Instance();
     m_sprite.setTexture(texManager->getAsteroidTexture());
+
     m_sprite.setOrigin(0.5f * texManager->getAsteroidTexture().getSize().x, 0.5f * texManager->getAsteroidTexture().getSize().y);
 
+    // Defing the box 2D elements
+    b2BodyDef bodyDef;
+    bodyDef.fixedRotation = false;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.angularDamping = 0.01f;
+    bodyDef.linearDamping = 0.01f;
     // Set Datas
     m_userData->setLocalId(getGlobalId());
     m_userData->setType(UserDataType::ASTEROID);
@@ -43,8 +51,8 @@ Asteroid::Asteroid(b2World& world_, sf::Vector2f size_) : Box2DEntity(world_)
 
 void Asteroid::createFixture(const float sizeX, const float sizeY)
 {
-
-	// Shape of the physical (A box)
+    
+    // Shape of the physical (A box)
     b2CircleShape hitBox;
     hitBox.m_radius = pixelsToMeters(sizeX * 0.5f);
 
@@ -56,12 +64,38 @@ void Asteroid::createFixture(const float sizeX, const float sizeY)
     playerFixtureDef.restitution = 1.0f; // Make it bounce a little bit
     m_body->CreateFixture(&playerFixtureDef);
 
+    // Set angle and velocity
+    b2Vec2 physicalStartPos = pixelsToMeters(sf::Vector2f(startPos.x, startPos.y));
+    m_body->SetTransform(physicalStartPos, angle);
+
+    b2Vec2 initialVelocity = b2Vec2(rndVelocityX(generator), rndVelocityY(generator));
+    m_body->SetLinearVelocity(initialVelocity);
+
+    update();
+
 }
 
 void Asteroid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
-    target.draw(m_sprite, states);
+	target.draw(m_sprite, states);
+}
+
+void Asteroid::update()
+{
+
+    // Get the position of the body
+    b2Vec2 bodyPos = m_body->GetPosition();
+
+    // Translate meters to pixels
+    sf::Vector2f graphicPosition = metersToPixels(bodyPos);
+
+    // Set the position of the Graphic object
+    setPosition(graphicPosition);
+
+    float angle = m_body->GetAngle();
+    setRotation(radToDeg(angle));
+
 }
 
 void Asteroid::setIsDead()

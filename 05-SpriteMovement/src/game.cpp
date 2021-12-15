@@ -24,6 +24,7 @@ void Game::init() {
 	m_window.setVerticalSyncEnabled(true);
 	m_window.setFramerateLimit(60.0f);
 
+	m_ship.init(m_window.getSize());
 	m_ship.move(sf::Vector2f(0.5f * m_window.getSize().x, 0.5f * m_window.getSize().y), sf::Vector2f(0, 0));
 
 	m_gameOverTitle.setTexture(texture_manager->getGameOverTexture());
@@ -188,6 +189,14 @@ void Game::update()
 	collectedElapsed += elapsed;
 
 	if (collectedElapsed.asSeconds() > 1.0f) {
+
+		std::random_device rd; // obtain a random number from hardware
+		std::mt19937 generator(rd()); // seed the generator
+		std::uniform_int_distribution<> rndAngle(0, 360); // define the range
+		std::uniform_int_distribution<> rndX(0, m_window.getSize().x); // define the range
+		std::uniform_int_distribution<> rndY(0, m_window.getSize().y); // define the range
+
+		sf::Vector2f rdnPos(rndX(generator), rndY(generator));
 
 		// Pop an asteroid
 		m_asteroidManager.AddAsteroid(sf::Vector2f(m_window.getSize()));

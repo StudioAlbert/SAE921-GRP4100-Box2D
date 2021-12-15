@@ -33,6 +33,9 @@ public:
 private:
 	sf::Sprite	m_sprite;
 
+	b2Body* m_body = nullptr;
+	UserData* m_userData = new UserData(UserDataType::ASTEROID);
+
 	bool m_isDead = false;
 
 	static long m_localIdAsteroid;
