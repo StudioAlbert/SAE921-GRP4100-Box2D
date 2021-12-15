@@ -1,9 +1,9 @@
-#include "contact_listener.h"
+#include "core/contact_listener.h"
 
 #include <iostream>
 
 #include "game.h"
-#include "userData.h"
+#include "core/userData.h"
 
 
 MyContactListener::MyContactListener(Game& game) : game_(game)
@@ -14,8 +14,8 @@ MyContactListener::MyContactListener(Game& game) : game_(game)
 void MyContactListener::BeginContact(b2Contact* contact)
 {
     std::cout << "Contact Begin!" << std::endl;
-    
-    UserData* A_Data = reinterpret_cast<UserData*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
+
+	UserData* A_Data = reinterpret_cast<UserData*>(contact->GetFixtureA()->GetBody()->GetUserData().pointer);
     UserData* B_Data = reinterpret_cast<UserData*>(contact->GetFixtureB()->GetBody()->GetUserData().pointer);
 
     std::cout << "A Fixture : " << UserData::UserDataTypeToString(A_Data->getUserDataType()) << ":[id=" << A_Data->getLocalId() << "]" << std::endl;
@@ -36,6 +36,7 @@ void MyContactListener::BeginContact(b2Contact* contact)
                 game_.putAsteroidToDeath(B_Data->getLocalId());
                 game_.putMissileToDeath(A_Data->getLocalId());
             }
+            
         }
 
     }

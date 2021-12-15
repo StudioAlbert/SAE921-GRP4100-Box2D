@@ -4,15 +4,16 @@
 #include <box2d/b2_world.h>
 #include <SFML/Graphics/Drawable.hpp>
 
-#include "SFML_Utilities.h"
+#include "core/SFML_Utilities.h"
 
 #include "missile.h"
 #include "ship.h"
+#include "managers/soundManager.h"
 
 class MissileManager : public sf::Drawable {
 
 private:
-	std::vector<Missile> m_missiles;
+	std::vector<std::unique_ptr<Missile>> m_missiles;
 	b2World& m_world;
 
 public:

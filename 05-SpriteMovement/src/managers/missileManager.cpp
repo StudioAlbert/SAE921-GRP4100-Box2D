@@ -1,4 +1,4 @@
-#include "missileManager.h"
+#include "managers/missileManager.h"
 
 MissileManager::MissileManager(b2World& world_) : m_world(world_)
 {
@@ -7,21 +7,21 @@ MissileManager::MissileManager(b2World& world_) : m_world(world_)
 void MissileManager::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	for (auto& m : m_missiles) {
-		target.draw(m, states);
+		target.draw(*m, states);
 	}
 }
 
 void MissileManager::update()
 {
-	auto m = std::remove_if(
+	auto missileRemIt = std::remove_if(
 		m_missiles.begin(),
 		m_missiles.end(),
-		[](Missile& m) {return m.getIsDead(); });
+		[](std::unique_ptr<Missile>& m) {return m->getIsDead(); });
 
-	m_missiles.erase(m, m_missiles.end());
+	m_missiles.erase(missileRemIt, m_missiles.end());
 
 	for (auto& m : m_missiles) {
-		m.update();
+		m->update();
 	}
 }
 
@@ -32,7 +32,7 @@ void MissileManager::AddMissile(Ship& ship_)
 	float angle = ship_.getRotation();
 
 	m_missiles.emplace_back(
-		Missile(
+		std::make_unique<Missile>(
 			m_world,
 			startPos,
 			angle)
@@ -42,15 +42,15 @@ void MissileManager::AddMissile(Ship& ship_)
 void MissileManager::putMissileToDeath(int idMissile_)
 {
 	// Check id, then put isDead to true
-	auto m = std::find_if(
+	auto mFintIt = std::find_if(
 		m_missiles.begin(),
 		m_missiles.end(),
-		[idMissile_](Missile& m) {return m.getLocalId() == idMissile_; }
+		[idMissile_](std::unique_ptr<Missile>& m) {return m->getLocalId() == idMissile_; }
 	);
 
-	if(m != m_missiles.end())
+	if(mFintIt != m_missiles.end())
 	{
-		m->setIsDead();
+		mFintIt->get()->setIsDead();
 	}
 
 }

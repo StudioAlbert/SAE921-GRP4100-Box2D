@@ -4,25 +4,41 @@
 
 long Missile::m_localIdMissile = 0;
 
-Missile::Missile(b2World& world_, const sf::Vector2f startPos_, const float angle_) {
+Missile::Missile(b2World& world_, const sf::Vector2f startPos_, const float angle_) : Box2DEntity(world_)
+{
+    createFixture(pixelsToMeters(texManager->getMissileTexture().getSize().x), pixelsToMeters(texManager->getMissileTexture().getSize().y));
 
-    TextureManager* texManager = TextureManager::Instance();
     m_sprite.setTexture(texManager->getMissileTexture());
-
     m_sprite.setOrigin(0.5f * texManager->getMissileTexture().getSize().x, 0.5f * texManager->getMissileTexture().getSize().y);
 
     // Defing the box 2D elements
-    b2BodyDef bodyDef;
-    bodyDef.fixedRotation = true;
-    bodyDef.type = b2_kinematicBody;
-    bodyDef.angularDamping = 0.0f;
-    bodyDef.linearDamping = 0.0f;
+    m_body->SetFixedRotation(true);
+    m_body->SetType(b2_kinematicBody);
+    m_body->SetAngularDamping(0.0f);
+    m_body->SetLinearDamping(0.0f);
+    
     // Set Datas
     m_userData->setLocalId(getGlobalId());
-    bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
+    m_userData->setType(UserDataType::MISSILE);
 
-    m_body = world_.CreateBody(&bodyDef);
+    // Set angle, velocity and position -----------------------------
+    b2Vec2 physicalStartPos = b2Vec2(pixelsToMeters(startPos_).x, pixelsToMeters(startPos_).y + 0.15f);
+    m_body->SetTransform(physicalStartPos, degToRad(angle_ - 90.0f));
 
+    b2Vec2 initialVelocity = m_body->GetLocalVector(b2Vec2(5.0f , 0.0f));
+    m_body->SetLinearVelocity(initialVelocity);
+
+    update();
+
+}
+
+//Missile::~Missile()
+//{
+//	
+//}
+
+void Missile::createFixture(const float sizeX, const float sizeY)
+{
     // Shape of the physical (A box)
     b2PolygonShape hitBox;
     hitBox.SetAsBox(pixelsToMeters(texManager->getMissileTexture().getSize().x * 0.5f), pixelsToMeters(texManager->getMissileTexture().getSize().y * 0.5f));
@@ -37,16 +53,8 @@ Missile::Missile(b2World& world_, const sf::Vector2f startPos_, const float angl
 
     m_body->CreateFixture(&playerFixtureDef);
 
-    // Set angle, velocity and position -----------------------------
-    b2Vec2 physicalStartPos = b2Vec2(pixelsToMeters(startPos_).x, pixelsToMeters(startPos_).y + 0.15f);
-    m_body->SetTransform(physicalStartPos, degToRad(angle_ - 90.0f));
-
-    b2Vec2 initialVelocity = m_body->GetLocalVector(b2Vec2(5.0f , 0.0f));
-    m_body->SetLinearVelocity(initialVelocity);
-
-    update();
-
 }
+
 
 void Missile::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {

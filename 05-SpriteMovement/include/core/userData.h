@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <box2d/b2_settings.h>
 
 enum UserDataType : char
 {
@@ -12,7 +13,7 @@ enum UserDataType : char
 
 };
 
-class UserData
+class UserData : public b2BodyUserData
 {
 public:
     UserData();
@@ -22,7 +23,9 @@ public:
 
     UserDataType getUserDataType();
     signed long getLocalId();
+
     void setLocalId(signed long id_);
+    void setType(UserDataType type_);
 
 private:
     UserDataType m_type;

@@ -12,7 +12,7 @@ class AsteroidManager : public sf::Drawable
 {
 
 private:
-	std::vector<Asteroid> asteroids;
+	std::vector<std::unique_ptr<Asteroid>> asteroids;
 	b2World& m_world;
 		
 public:
@@ -22,7 +22,7 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void update();
 
-	void AddAsteroid(sf::Vector2f startPos, float angle);
+	void AddAsteroid(sf::Vector2f size);
 	void putAsteroidToDeath(int idAsteroid_);
 
 };

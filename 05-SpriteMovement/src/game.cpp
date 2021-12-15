@@ -4,12 +4,12 @@
 
 #include <iostream>
 
-#include "textureManager.h"
+#include "managers/textureManager.h"
 
 Game::Game() : 
 	m_gravity(0.0f, 0.0f),
 	m_world(m_gravity),
-	m_ship(*this),
+	m_ship(m_world),
 	m_contacts(*this),
 	m_missileManager(m_world),
 	m_asteroidManager(m_world)
@@ -24,7 +24,6 @@ void Game::init() {
 	m_window.setVerticalSyncEnabled(true);
 	m_window.setFramerateLimit(60.0f);
 
-	m_ship.init(m_window.getSize());
 	m_ship.move(sf::Vector2f(0.5f * m_window.getSize().x, 0.5f * m_window.getSize().y), sf::Vector2f(0, 0));
 
 	m_gameOverTitle.setTexture(texture_manager->getGameOverTexture());
@@ -34,32 +33,32 @@ void Game::init() {
 	// Add a bouncer
 // TOP LIMIT -------------------------------------------
 	m_windowLimits.push_back(
-		Bouncer(
-			*this,
+		std::make_unique<Bouncer>(
+			m_world,
 			sf::Vector2f(0.5f * m_window.getSize().x, 0.0f),
 			sf::Vector2f(m_window.getSize().x, 10.0f)
 		)
 	);
 	// BOTTOM LIMIT -------------------------------------------
 	m_windowLimits.push_back(
-		Bouncer(
-			*this,
+		std::make_unique<Bouncer>(
+			m_world,
 			sf::Vector2f(0.5f * m_window.getSize().x, m_window.getSize().y),
 			sf::Vector2f(m_window.getSize().x, 10.0f)
 		)
 	);
 	// LEFT LIMIT -------------------------------------------
 	m_windowLimits.push_back(
-		Bouncer(
-			*this,
+		std::make_unique<Bouncer>(
+			m_world,
 			sf::Vector2f(0.0f, 0.5f * m_window.getSize().y),
 			sf::Vector2f(10.0F, m_window.getSize().y)
 		)
 	);
 	// RIGHT LIMIT -------------------------------------------
 	m_windowLimits.push_back(
-		Bouncer(
-			*this,
+		std::make_unique<Bouncer>(
+			m_world,
 			sf::Vector2f(m_window.getSize().x, 0.5f * m_window.getSize().y),
 			sf::Vector2f(10.0f, m_window.getSize().y)
 		)
@@ -109,6 +108,11 @@ void Game::loop()
 				if (event.key.code == sf::Keyboard::Key::Space)
 				{
 					m_missileManager.AddMissile(m_ship);
+					m_soundManager->playPiou();
+
+				}
+				if (event.key.code == sf::Keyboard::Key::Left || event.key.code == sf::Keyboard::Key::Right) {
+					m_ship.setAngularDamping(10.0f);
 				}
 
 			}
@@ -119,7 +123,7 @@ void Game::loop()
 			m_ship.speedUp(1.0f);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-			m_ship.speedDown(1.0f);
+			m_ship.speedDown(10.0f);
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
@@ -140,6 +144,8 @@ void Game::loop()
 #pragma endregion
 		draw();
 
+		m_soundManager->cleanSounds();
+
 #pragma region Graphics process
 
 #pragma endregion
@@ -157,6 +163,7 @@ void Game::update()
 
 	// Update the ship
 	m_ship.update();
+
 	// Update Life bars with the lif of the ship
 	m_lifeBar.setLife(m_ship.getLife());
 	m_lifeBar.update();
@@ -164,6 +171,7 @@ void Game::update()
 	{
 		// LOOOOSSSEEEEERRRRRRRRRR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		m_gameOver = true;
+		m_soundManager->playBoum();
 		return;
 	}
 
@@ -172,7 +180,7 @@ void Game::update()
 	m_missileManager.update();
 	// Update limits
 	for (auto& b : m_windowLimits) {
-		b.update();
+		b->update();
 	}
 
 	// Tick every 1.0sec
@@ -181,16 +189,8 @@ void Game::update()
 
 	if (collectedElapsed.asSeconds() > 1.0f) {
 
-		std::random_device rd; // obtain a random number from hardware
-		std::mt19937 generator(rd()); // seed the generator
-		std::uniform_int_distribution<> rndAngle(0, 360); // define the range
-		std::uniform_int_distribution<> rndX(0, m_window.getSize().x); // define the range
-		std::uniform_int_distribution<> rndY(0, m_window.getSize().y); // define the range
-
-		sf::Vector2f rdnPos(rndX(generator), rndY(generator));
-
 		// Pop an asteroid
-		m_asteroidManager.AddAsteroid(rdnPos, rndAngle(generator));
+		m_asteroidManager.AddAsteroid(sf::Vector2f(m_window.getSize()));
 
 		collectedElapsed = sf::Time::Zero;
 
@@ -215,7 +215,7 @@ void Game::draw()
 	if (m_debugMode)
 	{
 		for (auto& b : m_windowLimits) {
-			m_window.draw(b);
+			m_window.draw(*b);
 		}
 	}
 	// Draw Life bar
@@ -231,6 +231,8 @@ void Game::draw()
 void Game::setDamagesToShip(float damages_)
 {
 	m_ship.setDamages(damages_);
+	m_soundManager->playBoum();
+
 }
 
 void Game::putAsteroidToDeath(int idAsteroid_)
@@ -243,3 +245,4 @@ void Game::putMissileToDeath(int idMissile_)
 	m_missileManager.putMissileToDeath(idMissile_);
 	std::cout << "Missile " << idMissile_ << " sent to death." << std::endl;
 }
+

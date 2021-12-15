@@ -25,5 +25,4 @@ sf::Vector2f metersToPixels(b2Vec2 meters);
 static constexpr float pixelsMetersRatio = 100.0f;
 constexpr float epsilon = 0.0001f;
 
-
-
+sf::Vector2f getWorldMousePosition(sf::RenderWindow& window_);

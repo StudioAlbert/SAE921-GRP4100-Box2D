@@ -5,12 +5,12 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "box2d/b2_world.h"
 
-#include "asteroidManager.h"
 #include "bouncer.h"
-#include "contact_listener.h"
 #include "lifeBar.h"
-#include "missileManager.h"
 #include "ship.h"
+#include "core/contact_listener.h"
+#include "managers/asteroidManager.h"
+#include "managers/missileManager.h"
 
 class Game {
 
@@ -35,10 +35,13 @@ private:
 	// The window ---------------------------------------------
 	sf::RenderWindow m_window;
 
+	// Sounds
+	SoundManager* m_soundManager = SoundManager::Instance();
+
 	// The physical world -------------------------------------
 	b2Vec2 m_gravity;
 	b2World m_world;
-	std::vector<Bouncer> m_windowLimits;
+	std::vector<std::unique_ptr<Bouncer>> m_windowLimits;
 	MyContactListener m_contacts;
 
 
@@ -56,6 +59,8 @@ private:
 
 	void update();
 	void draw();
+
+	void call(int i);
 
 
 };

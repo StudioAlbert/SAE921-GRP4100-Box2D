@@ -1,4 +1,4 @@
-#include "userData.h"
+#include "core/userData.h"
 
 UserData::UserData()
 {
@@ -13,6 +13,11 @@ UserData::UserData(UserDataType type_) : m_type(type_)
 UserDataType UserData::getUserDataType()
 {
 	return m_type;
+}
+
+void UserData::setType(UserDataType type_)
+{
+	m_type = type_;
 }
 
 void UserData::setLocalId(signed long id_)

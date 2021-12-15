@@ -1,21 +1,33 @@
 #pragma once
 
-#include "userData.h"
 #include "SFML/Graphics.hpp"
-#include "box2d/box2d.h"
+#include "core/box2DEntity.h"
+#include "managers/soundManager.h"
 
 class Game;
 
-class Ship : public sf::Drawable, public sf::Transformable {
+constexpr float maxAngularVelocity = 0.5;
+constexpr float epsilonAngularVelocity = 0.0001;
+constexpr float maxLinearVelocity = 5.0;
+constexpr float epsilonLinearVelocity = 0.0001;
+
+class Ship : public Box2DEntity
+{
+
+private:
+	sf::Sprite m_sprite;
+
+	float m_life = 100.0f;
+
+protected:
+	void createFixture(const float sizeX, const float sizeY) override;
 
 public:
 
-	explicit Ship(Game& game_);
-	~Ship() {};
+	explicit Ship(b2World& world_);
+	~Ship() {}
 
-	void init(sf::Vector2u winsize);
 	void update();
-
 	void move(sf::Vector2f _pixelsPosition, sf::Vector2f _velocity);
 
 	void speedUp(float force);
@@ -25,6 +37,7 @@ public:
 	void rotateLeft(float torque);
 	void rotateRight(float torque);
 	void ApplyTorqueWithCheck(float torque);
+	void setAngularDamping(float x);;
 
 	// DRAWABLE OVERRIDES
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -34,14 +47,5 @@ public:
 	void setDamages(float damages_);
 	constexpr float lifeMax() { return 100.0f; };
 
-private:
-	Game& m_game;
-
-	sf::Sprite m_sprite;
-
-	b2Body* m_body = nullptr;
-	UserData* m_userData = new UserData(UserDataType::SHIP);
-
-	float m_life = 100.0f;
 
 };
