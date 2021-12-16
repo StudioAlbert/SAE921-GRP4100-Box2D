@@ -9,7 +9,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS On)
 message("START CMAKE " ${EXECUTABLE_CUSTOM_NAME})
 
 file(GLOB_RECURSE DATA_FILES data/*)
-source_group("Data/" FILES ${DATA_FILES})
+source_group("data/" FILES ${DATA_FILES})
 foreach(DATA ${DATA_FILES})
     get_filename_component(FILE_NAME ${DATA} NAME)
     get_filename_component(PATH_NAME ${DATA} DIRECTORY)

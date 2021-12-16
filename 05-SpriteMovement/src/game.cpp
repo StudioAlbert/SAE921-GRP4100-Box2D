@@ -6,7 +6,7 @@
 
 #include "managers/textureManager.h"
 
-Game::Game() : 
+Game::Game() :
 	m_gravity(0.0f, 0.0f),
 	m_world(m_gravity),
 	m_ship(m_world),
@@ -38,7 +38,7 @@ void Game::init() {
 			m_world,
 			sf::Vector2f(0.5f * m_window.getSize().x, 0.0f),
 			sf::Vector2f(m_window.getSize().x, 10.0f)
-		)
+			)
 	);
 	// BOTTOM LIMIT -------------------------------------------
 	m_windowLimits.push_back(
@@ -46,7 +46,7 @@ void Game::init() {
 			m_world,
 			sf::Vector2f(0.5f * m_window.getSize().x, m_window.getSize().y),
 			sf::Vector2f(m_window.getSize().x, 10.0f)
-		)
+			)
 	);
 	// LEFT LIMIT -------------------------------------------
 	m_windowLimits.push_back(
@@ -54,7 +54,7 @@ void Game::init() {
 			m_world,
 			sf::Vector2f(0.0f, 0.5f * m_window.getSize().y),
 			sf::Vector2f(10.0F, m_window.getSize().y)
-		)
+			)
 	);
 	// RIGHT LIMIT -------------------------------------------
 	m_windowLimits.push_back(
@@ -62,7 +62,7 @@ void Game::init() {
 			m_world,
 			sf::Vector2f(m_window.getSize().x, 0.5f * m_window.getSize().y),
 			sf::Vector2f(10.0f, m_window.getSize().y)
-		)
+			)
 	);
 
 	m_debugMode = false;
@@ -100,7 +100,7 @@ void Game::loop()
 			}
 
 			// Keyboard event
-			if(event.type == sf::Event::KeyReleased)
+			if (event.type == sf::Event::KeyReleased)
 			{
 				if (event.key.code == sf::Keyboard::Key::D)
 				{
@@ -139,7 +139,7 @@ void Game::loop()
 
 
 #pragma region Physical process
-		if(!m_gameOver)
+		if (!m_gameOver)
 			update();
 
 #pragma endregion
@@ -213,7 +213,7 @@ void Game::draw()
 
 	// DRWA THINGS ----------------------------------------------------------
 	// Draw the ship
-	if(!m_gameOver)
+	if (!m_gameOver)
 		m_window.draw(m_ship);
 
 	// Draw asteroids
@@ -230,7 +230,7 @@ void Game::draw()
 	// Draw Life bar
 	m_window.draw(m_lifeBar);
 
-	if(m_gameOver)
+	if (m_gameOver)
 		m_window.draw(m_gameOverTitle);
 
 	// Display all elements

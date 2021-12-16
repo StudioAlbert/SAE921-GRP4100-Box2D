@@ -55,15 +55,6 @@ void Missile::createFixture(const float sizeX, const float sizeY)
 
     m_body->CreateFixture(&playerFixtureDef);
 
-    // Set angle, velocity and position -----------------------------
-    b2Vec2 physicalStartPos = b2Vec2(pixelsToMeters(startPos_).x, pixelsToMeters(startPos_).y + 0.15f);
-    m_body->SetTransform(physicalStartPos, degToRad(angle_ - 90.0f));
-
-    b2Vec2 initialVelocity = m_body->GetLocalVector(b2Vec2(5.0f , 0.0f));
-    m_body->SetLinearVelocity(initialVelocity);
-
-    update();
-
 }
 
 

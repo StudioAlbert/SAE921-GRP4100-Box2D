@@ -23,7 +23,6 @@ void MyContactListener::BeginContact(b2Contact* contact)
 
     if (A_Data->getUserDataType() == UserDataType::ASTEROID || B_Data->getUserDataType() == UserDataType::ASTEROID)
     {
-
     	if (B_Data->getUserDataType() == UserDataType::MISSILE || A_Data->getUserDataType() == UserDataType::MISSILE)
         {
             if (A_Data->getUserDataType() == UserDataType::ASTEROID)
@@ -36,9 +35,7 @@ void MyContactListener::BeginContact(b2Contact* contact)
                 game_.putAsteroidToDeath(B_Data->getLocalId());
                 game_.putMissileToDeath(A_Data->getLocalId());
             }
-            
         }
-
     }
 
 }

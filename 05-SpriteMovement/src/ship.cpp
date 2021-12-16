@@ -1,22 +1,17 @@
 
-#include "game.h"
-#include "ship.h"
-
-#include "SFML_Utilities.h"
 #include <iostream>
 
 #include "core/SFML_Utilities.h"
 #include "core/userData.h"
 #include "managers/textureManager.h"
 
-Ship::Ship(Game& game_) : m_game(game_)
-{
-}
+#include "game.h"
+#include "ship.h"
 
 Ship::Ship(b2World& world_) : Box2DEntity(world_)
 {
     createFixture(pixelsToMeters(texManager->getShipTexture().getSize().x), pixelsToMeters(texManager->getShipTexture().getSize().y));
-
+}
 
 void Ship::init(sf::Vector2u winsize) {
 
@@ -26,7 +21,7 @@ void Ship::init(sf::Vector2u winsize) {
     m_sprite.setOrigin(texManager->getShipTexture().getSize().x * 0.5f, texManager->getShipTexture().getSize().y * 0.5f);
     
     // Set Datas
-    m_userData->setLocalId(-1);
+    //m_userData->setLocalId(-1);
     m_userData->setType(UserDataType::SHIP);
     
     m_body->SetLinearDamping(0.5f);
@@ -88,10 +83,6 @@ void Ship::move(sf::Vector2f _pixelsPosition, sf::Vector2f _velocity) {
 
 void Ship::speedUp(float forceValue) {
     ApplyLocalForceWithCheck(1.0f * forceValue);
-}
-
-void Ship::speedDown(float forceValue) {
-    ApplyLocalForceWithCheck(-1.0f * forceValue);
 }
 
 void Ship::ApplyLocalForceWithCheck(float forceValue) {

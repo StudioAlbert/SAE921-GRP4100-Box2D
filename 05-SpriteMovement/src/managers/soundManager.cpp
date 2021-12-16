@@ -1,13 +1,12 @@
 #include "managers/soundManager.h"
 
-
 SoundManager* SoundManager::SoundManager_ = nullptr;
 
 SoundManager::SoundManager()
 {
     if (!soundFxPiou.loadFromFile("data/sounds/Piou.wav"))
     {
-        std::cout << "Error loading : " << "data/sounds/Piou.wav" << std::endl;
+        std::cerr << "Error loading : " << "data/sounds/Piou.wav" << std::endl;
     }
 
     if (!soundFxBrr.loadFromFile("data/sounds/Brr.wav"))
@@ -19,9 +18,8 @@ SoundManager::SoundManager()
     {
         std::cout << "Error loading : " << "data/sounds/Boum.wav" << std::endl;
     }
+
 }
-
-
 
 /**
  * Static methods should be defined outside the class.

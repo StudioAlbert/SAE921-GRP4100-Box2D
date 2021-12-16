@@ -5,15 +5,12 @@
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "box2d/b2_world.h"
 
-#include "asteroidManager.h"
 #include "bouncer.h"
-#include "contact_listener.h"
 #include "lifeBar.h"
-#include "missileManager.h"
 #include "ship.h"
 #include "core/contact_listener.h"
-#include "managers/asteroidManager.h"
 #include "managers/missileManager.h"
+#include "managers/asteroidManager.h"
 
 class Game {
 

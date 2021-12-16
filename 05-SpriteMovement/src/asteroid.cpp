@@ -64,38 +64,12 @@ void Asteroid::createFixture(const float sizeX, const float sizeY)
     playerFixtureDef.restitution = 1.0f; // Make it bounce a little bit
     m_body->CreateFixture(&playerFixtureDef);
 
-    // Set angle and velocity
-    b2Vec2 physicalStartPos = pixelsToMeters(sf::Vector2f(startPos.x, startPos.y));
-    m_body->SetTransform(physicalStartPos, angle);
-
-    b2Vec2 initialVelocity = b2Vec2(rndVelocityX(generator), rndVelocityY(generator));
-    m_body->SetLinearVelocity(initialVelocity);
-
-    update();
-
 }
 
 void Asteroid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
 	target.draw(m_sprite, states);
-}
-
-void Asteroid::update()
-{
-
-    // Get the position of the body
-    b2Vec2 bodyPos = m_body->GetPosition();
-
-    // Translate meters to pixels
-    sf::Vector2f graphicPosition = metersToPixels(bodyPos);
-
-    // Set the position of the Graphic object
-    setPosition(graphicPosition);
-
-    float angle = m_body->GetAngle();
-    setRotation(radToDeg(angle));
-
 }
 
 void Asteroid::setIsDead()
@@ -111,6 +85,7 @@ long Asteroid::getLocalId()
 {
     return m_userData->getLocalId();
 }
+
 long Asteroid::getGlobalId()
 {
     return m_localIdAsteroid++;
